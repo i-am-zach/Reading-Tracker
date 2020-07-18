@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "468234828266",
+    "firebase_url": "https://reading-ta.firebaseio.com",
+    "project_id": "reading-ta",
+    "storage_bucket": "reading-ta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:468234828266:android:8a9ecae3f70c0c43f7da93",
+        "android_client_info": {
+          "package_name": "com.lefkovitz.readingtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "468234828266-mn1kvdjhbm1b784aafgc41e30qfd1be4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXkpPXtNtXvUpW7S3LXYRj0xGZcHkdqwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "468234828266-mn1kvdjhbm1b784aafgc41e30qfd1be4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
