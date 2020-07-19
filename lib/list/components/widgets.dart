@@ -111,7 +111,7 @@ class SessionCard extends StatelessWidget {
                         )),
                   SessionListTile(
                       icon: FontAwesomeIcons.book,
-                      title: book != null ? book.title : "None"),
+                      title: book != null ? "${book.title} (${book.pages})" : "None"),
                   SessionListTile(
                     icon: FontAwesomeIcons.bookmark,
                     richText: RichText(
@@ -120,13 +120,15 @@ class SessionCard extends StatelessWidget {
                           style: textStyle,
                           children: [
                             TextSpan(
-                                style: TextStyle(
-                                  color: Colors.grey[500],
-                                  fontWeight: FontWeight.w300,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                                text:
-                                    "${(100 * session.startPage / book.pages).toStringAsFixed(2)}%"),
+                              style: TextStyle(
+                                color: Colors.grey[500],
+                                fontWeight: FontWeight.w300,
+                                fontStyle: FontStyle.italic,
+                              ),
+                              text: book != null
+                                  ? "${(100 * session.endPage / book.pages).toStringAsFixed(2)}%"
+                                  : "",
+                            ),
                           ]),
                     ),
                   ),
@@ -158,13 +160,15 @@ class SessionCard extends StatelessWidget {
                             style: textStyle,
                             children: [
                               TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontWeight: FontWeight.w300,
-                                    fontStyle: FontStyle.italic,
-                                  ),
-                                  text:
-                                      "${(100 * session.endPage / book.pages).toStringAsFixed(2)}%"),
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontWeight: FontWeight.w300,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                                text: book != null
+                                    ? "${(100 * session.endPage / book.pages).toStringAsFixed(2)}%"
+                                    : "",
+                              ),
                             ]),
                       ),
                     ),
