@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:reading_tracker/list/main.dart';
 
 final Firestore _db = Firestore.instance;
 
@@ -39,6 +40,15 @@ class ReadingSession {
     return "ReadingSession{startPage: $startPage, endPage: $endPage, duration: $duration}";
   }
 
+  Map<String, dynamic> toMap() => {
+        "id": id,
+        "bookId": bookId,
+        "startTime": startTime,
+        "endTime": endTime,
+        "startPage": startPage,
+        "endPage": endPage,
+      };
+
   int get numPages => isIncomplete() ? 0 : endPage - startPage;
 
   Duration get duration =>
@@ -64,18 +74,37 @@ class ReadingSession {
     return _transformQsnap(qsnap);
   }
 
-  static Future<void> start({int startPage, String bookId}) async {
-    DocumentReference docRef = await _db.collection("reading_sessions").add({
+  static Future<void> insert(ReadingSession session) {
+    assert(session.id != null, "Reading Session must have ID to insert");
+    return _db
+        .collection("reading_sessions")
+        .document(session.id)
+        .setData(session.toMap());
+  }
+
+  static Future<void> delete(String id) {
+    return _db.collection("reading_sessions").document(id).delete();
+  }
+
+  static Future<void> start() async {
+    List<ReadingSession> sessions = await ReadingSession.asyncAll();
+    int startPage;
+    if (sessions.length >= 1) {
+      ReadingSession prevSession = sessions.last;
+      startPage = prevSession.endPage;
+    }
+    Map<String, dynamic> data = {
       "startTime": DateTime.now(),
-      "startPage": startPage,
-      "bookId": bookId,
-      "endPage": null,
-      "endTime": null,
-    });
+    };
+    if (startPage != null) {
+      data["startPage"] = startPage;
+    }
+    DocumentReference docRef =
+        await _db.collection("reading_sessions").add(data);
     return docRef.setData({"id": docRef.documentID}, merge: true);
   }
 
-  static Future<void> stop({int endPage}) async {
+  static Future<void> stop({@required int endPage}) async {
     List<ReadingSession> sessions = await ReadingSession.asyncAll();
     ReadingSession activeSession = sessions.last;
     return _db

@@ -65,99 +65,59 @@ class SessionCard extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.0),
-      child: Column(
-        children: <Widget>[
-          Card(
-            margin: EdgeInsets.symmetric(horizontal: 16.0),
-            elevation: 4.0,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(Icons.book, size: iconSize),
-                      ),
-                      SizedBox(
-                        width: 6.0,
-                      ),
-                      Container(
-                        child: Text(
-                          book != null ? book.title : "None",
-                          style: textStyle,
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: elemSpacing),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(Icons.calendar_today, size: iconSize),
-                      ),
-                      SizedBox(width: 6.0),
-                      Container(
-                        child: Text(
-                          formattedDate(session.startTime),
-                          style: textStyle,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: elemSpacing),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(Icons.bookmark_border, size: iconSize),
-                      ),
-                      SizedBox(width: 6.0),
-                      Container(
-                        child: RichText(
-                            text: TextSpan(
-                          text: "${session.startPage}",
-                          style: textStyle,
-                          children: <TextSpan>[
-                            TextSpan(text: " / 551", style: unemphasizedStyle),
-                          ],
-                        )),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: elemSpacing),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        child: Icon(Icons.timer, size: iconSize),
-                      ),
-                      SizedBox(width: 6.0),
-                      Container(
-                        child: Text(
-                          formattedTime(session.startTime),
-                          style: textStyle,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              fullscreenDialog: true,
+              builder: (context){
+                return SessionPage(session: session, books: books);
+              },
             ),
-          ),
-          SizedBox(
-            height: calculateLineHeight(),
-            width: 4,
-            child: Container(color: Colors.amber),
-          ),
-          if (!session.isIncomplete())
+          );
+        },
+        child: Column(
+          children: <Widget>[
             Card(
-              elevation: 4.0,
               margin: EdgeInsets.symmetric(horizontal: 16.0),
+              elevation: 4.0,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          child: Icon(Icons.book, size: iconSize),
+                        ),
+                        SizedBox(
+                          width: 6.0,
+                        ),
+                        Container(
+                          child: Text(
+                            book != null ? book.title : "None",
+                            style: textStyle,
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: elemSpacing),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          child: Icon(Icons.calendar_today, size: iconSize),
+                        ),
+                        SizedBox(width: 6.0),
+                        Container(
+                          child: Text(
+                            formattedDate(session.startTime),
+                            style: textStyle,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: elemSpacing),
                     Row(
                       children: <Widget>[
                         Container(
@@ -167,7 +127,7 @@ class SessionCard extends StatelessWidget {
                         Container(
                           child: RichText(
                               text: TextSpan(
-                            text: "${session.endPage}",
+                            text: session.startPage != null ? "${session.startPage}" : "?",
                             style: textStyle,
                             children: <TextSpan>[
                               TextSpan(
@@ -186,7 +146,7 @@ class SessionCard extends StatelessWidget {
                         SizedBox(width: 6.0),
                         Container(
                           child: Text(
-                            formattedTime(session.endTime),
+                            formattedTime(session.startTime),
                             style: textStyle,
                           ),
                         ),
@@ -196,7 +156,60 @@ class SessionCard extends StatelessWidget {
                 ),
               ),
             ),
-        ],
+            SizedBox(
+              height: calculateLineHeight(),
+              width: 4,
+              child: Container(color: Colors.amber),
+            ),
+            if (!session.isIncomplete())
+              Card(
+                elevation: 4.0,
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Icon(Icons.bookmark_border, size: iconSize),
+                          ),
+                          SizedBox(width: 6.0),
+                          Container(
+                            child: RichText(
+                                text: TextSpan(
+                              text: "${session.endPage}",
+                              style: textStyle,
+                              children: <TextSpan>[
+                                TextSpan(
+                                    text: " / 551", style: unemphasizedStyle),
+                              ],
+                            )),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: elemSpacing),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: Icon(Icons.timer, size: iconSize),
+                          ),
+                          SizedBox(width: 6.0),
+                          Container(
+                            child: Text(
+                              formattedTime(session.endTime),
+                              style: textStyle,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
