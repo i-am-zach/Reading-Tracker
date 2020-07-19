@@ -5,6 +5,22 @@ import 'package:reading_tracker/list/components/widgets.dart';
 import 'main.dart';
 import "package:reading_tracker/books/main.dart";
 
+bool isFirstOfDate({ReadingSession session, List<ReadingSession> sessions}) {
+  ReadingSession min;
+  sessions.forEach((ses) {
+    if (session.startTime.day == ses.startTime.day &&
+        session.startTime.month == ses.startTime.month &&
+        session.startTime.year == ses.startTime.year) {
+      if (min == null) {
+        min = ses;
+      } else if (ses.startTime.compareTo(min.startTime) < 0) {
+        min = ses;
+      }
+    }
+  });
+  return min.startTime == session.startTime;
+}
+
 class ListPage extends StatefulWidget {
   const ListPage({Key key}) : super(key: key);
 
@@ -16,8 +32,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     List<ReadingSession> sessions = Provider.of<List<ReadingSession>>(context);
-    List<Book> books = Provider.of<List<Book>>(context);
-    bool isActive = ReadingSession.isActive(sessions);
+    bool isActive = ReadingSession.isActive(sessions: sessions);
 
     return Stack(
       children: <Widget>[
@@ -25,7 +40,8 @@ class _ListPageState extends State<ListPage> {
           slivers: <Widget>[
             SliverAppBar(
               title: Text("Reading Sessions"),
-              expandedHeight: 100.0,
+              expandedHeight: 150.0,
+              pinned: true,
             ),
             SliverList(
               delegate:
@@ -36,6 +52,8 @@ class _ListPageState extends State<ListPage> {
                 ReadingSession session = sessions[index];
                 return SessionCard(
                   session: session,
+                  isFirstOfDate:
+                      isFirstOfDate(session: session, sessions: sessions),
                 );
               }),
             ),
@@ -141,7 +159,6 @@ class _SessionPageState extends State<SessionPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // Book ID
     if (widget.session.bookId != null) {

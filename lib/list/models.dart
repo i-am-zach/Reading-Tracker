@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:reading_tracker/list/main.dart';
 
 final Firestore _db = Firestore.instance;
 
@@ -57,6 +56,13 @@ class ReadingSession {
   bool isIncomplete() => this.endPage == null || this.endTime == null;
 
   bool isComplete() => !this.isIncomplete();
+
+  double get minutesPerPage {
+    if(isIncomplete()) {
+      return null;
+    }
+    return duration.inMinutes / numPages;
+  }
 
   static Stream<List<ReadingSession>> all() {
     return _db
@@ -116,9 +122,9 @@ class ReadingSession {
     }, merge: true);
   }
 
-  static bool isActive(List<ReadingSession> session) {
+  static bool isActive({List<ReadingSession> sessions}) {
     try {
-      ReadingSession lastSession = session.last;
+      ReadingSession lastSession = sessions.last;
       return lastSession.isIncomplete();
     } catch (error) {
       return false;
